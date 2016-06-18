@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'cgi'
 require 'net/http'
 require 'open-uri'
