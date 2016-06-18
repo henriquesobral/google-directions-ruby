@@ -11,10 +11,11 @@ class GoogleDirections
   @@base_url = 'http://maps.googleapis.com/maps/api/directions/xml'
 
   @@default_options = {
-    :language => :en,
-    :alternative => :true,
-    :sensor => :false,
-    :mode => :driving,
+    language: 'pt-BR',
+    alternative: :true,
+    mode: :driving,
+    units: :metric,
+    key: GOOGLE_MAPS_API_KEY || ""
   }
 
   def initialize(origin, destination, opts=@@default_options)
