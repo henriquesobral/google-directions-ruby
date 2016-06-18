@@ -2,7 +2,6 @@
 require 'cgi'
 require 'net/http'
 require 'open-uri'
-require 'nokogiri'
 
 class GoogleDirections
 
@@ -24,9 +23,11 @@ class GoogleDirections
     @options = opts.merge({:origin => @origin, :destination => @destination})
 
     @url = @@base_url + '?' + @options.to_query
-    @xml = open(@url).read
-    @doc = Nokogiri::XML(@xml)
-    @status = @doc.css('status').text
+    @json = open(@url).read
+    @doc = JSON.parse(@json)
+    @status = @doc["status"]
+    @route = @doc["routes"][0]
+    @leg = @route["legs"][0]
   end
 
   def xml_call
@@ -40,7 +41,7 @@ class GoogleDirections
     if @status != "OK"
       drive_time = 0
     else
-      drive_time = @doc.css("duration value").last.text
+      drive_time = @leg["duration"]["value"]
       convert_to_minutes(drive_time)
     end
   end
@@ -51,7 +52,7 @@ class GoogleDirections
     unless @status == 'OK'
       @distance = 0
     else
-      @distance = @doc.css("distance value").last.text
+      @distance = @leg["distance"]["value"]
     end
   end
 
@@ -60,7 +61,7 @@ class GoogleDirections
     unless @status == 'OK'
       @distance_text = "0 km"
     else
-      @distance_text = @doc.css("distance text").last.text
+      @distance_text = @leg["distance"]["text"]
     end
   end
 
@@ -80,7 +81,7 @@ class GoogleDirections
 
   def steps
     if @status == 'OK'
-      @doc.css('html_instructions').map {|a| a.text }
+      @leg["steps"].map{|i| i["html_instructions"]}
     else
       []
     end
