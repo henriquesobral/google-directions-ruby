@@ -13,8 +13,7 @@ class GoogleDirections
     language: 'pt-BR',
     alternative: :true,
     mode: :driving,
-    units: :metric,
-    key: GOOGLE_MAPS_API_KEY || ""
+    units: :metric
   }
 
   def initialize(origin, destination, opts=@@default_options)
