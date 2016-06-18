@@ -1,12 +1,13 @@
+# encoding: utf-8
 require 'cgi'
 require 'net/http'
 require 'open-uri'
 
 class GoogleDirections
 
-  attr_reader :status, :doc, :xml, :origin, :destination, :options
+  attr_reader :status, :route, :leg, :json, :origin, :destination, :options
 
-  @@base_url = 'http://maps.googleapis.com/maps/api/directions/xml'
+  @@base_url = 'http://maps.googleapis.com/maps/api/directions/json'
 
   @@default_options = {
     language: 'pt-BR',
@@ -21,7 +22,7 @@ class GoogleDirections
     @options = opts.merge({:origin => @origin, :destination => @destination})
 
     @url = @@base_url + '?' + @options.to_query
-    @json = open(@url).read
+    @json = open(@url).read.force_encoding("UTF-8")
     @doc = JSON.parse(@json)
     @status = @doc["status"]
     @route = @doc["routes"][0]
@@ -105,5 +106,3 @@ class Hash
   end unless method_defined? :to_query
 
 end
-
-
