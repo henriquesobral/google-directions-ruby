@@ -11,7 +11,7 @@ class GoogleDirections
 
   @@default_options = {
     language: 'pt-BR',
-    alternative: :true,
+    alternative: :false,
     mode: :driving,
     units: :metric
   }
@@ -35,6 +35,10 @@ class GoogleDirections
 
   # an example URL to be generated
   #http://maps.google.com/maps/api/directions/xml?origin=St.+Louis,+MO&destination=Nashville,+TN&sensor=false&key=ABQIAAAAINgf4OmAIbIdWblvypOUhxSQ8yY-fgrep0oj4uKpavE300Q6ExQlxB7SCyrAg2evsxwAsak4D0Liiv
+
+  def overview_polyline
+    @route["overview_polyline"]["points"]
+  end
 
   def drive_time_in_minutes
     if @status != "OK"
